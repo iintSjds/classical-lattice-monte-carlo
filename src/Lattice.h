@@ -37,11 +37,11 @@ class Primitive_Cell{
 
 template <class Site_Type>
 Primitive_Cell<Site_Type>::Primitive_Cell(Lattice_Type l_type){
-    if(l_type==KAGOMI){
+    if(l_type==KAGOMI){//predefined for Kagomi lattice
         dimension=2;
         cell_vectors={{1,0},{0.5,std::sqrt(3)/2}};
         sites_number=3;
-        site_coordinates={{0,0},{0.5,0},{0.25,std::sqrt(3)/4}};
+        site_coordinates={{0.5,0},{0.25,std::sqrt(3)/4},{0.75,std::sqrt(3)/4}};
         for(int i=0;i<sites_number;i++) sites.push_back(Site_Type());
     }
     if(l_type==TRIANGLE){
@@ -79,6 +79,7 @@ class Lattice{
         std::vector<Primitive_Cell<Site_Type>> cells;
     public:
         Lattice(Lattice_Type l_type,int L);
+        int get_Ls(int i) const {return Ls[i];}
         int get_dimension() const {return dimension;}
         int get_lengths(int i) const {return Ls[i];}
         int get_sub_number() const {return sub_number;}
@@ -99,6 +100,9 @@ Lattice<Site_Type>::Lattice(Lattice_Type l_type,int L){
 template <class Site_Type>
 Primitive_Cell<Site_Type>& Lattice<Site_Type>::get_cell(std::vector<int> r){
     int p=0;
+    for(int i=0;i<dimension;i++){// r[i] can be from -Ls[i] to Ls[i]
+        r[i]=(r[i]+Ls[i])%Ls[i];
+    }
     //p=r1+r2*L1+r3*L1*L1+...
     for(int i=0;i<dimension-1;i++){
         p+=r[dimension-1-i];
@@ -111,6 +115,9 @@ Primitive_Cell<Site_Type>& Lattice<Site_Type>::get_cell(std::vector<int> r){
 template <class Site_Type>
 Site_Type& Lattice<Site_Type>::get_site(std::vector<int> r,int sub){
     int p=0;
+    for(int i=0;i<dimension;i++){// r[i] can be from -Ls[i] to Ls[i]
+        r[i]=(r[i]+Ls[i])%Ls[i];
+    }
     //p=r1+r2*L1+r3*L1*L1+...
     for(int i=0;i<dimension-1;i++){
         p+=r[dimension-1-i];
@@ -121,3 +128,30 @@ Site_Type& Lattice<Site_Type>::get_site(std::vector<int> r,int sub){
     return cell.get_site(sub);
 }
 
+template <class Site_Type>
+class Kagomi_Lattice : public Lattice<Site_Type>
+{
+    public:
+        Kagomi_Lattice(int L);
+        std::vector<Site_Type> get_nn_sites(std::vector<int> r,int sub);//get nearest neighbors of a site
+
+};
+
+template <class Site_Type>
+std::vector<Site_Type> Kagomi_Lattice<Site_Type>::get_nn_sites(std::vector<int> r,int sub){
+    //return a vector of copies of nearest neighbors of the site
+    std::vector<std::vector<int>> nn_r_sub;
+    if(sub==0) nn_r_sub={{0,0,1},{0,0,2},{0,-1,2},{1,-1,1}};
+    if(sub==1) nn_r_sub={{0,0,0},{0,0,2},{-1,0,2},{-1,1,0}};
+    if(sub==2) nn_r_sub={{0,0,0},{0,0,1},{1,0,1},{0,1,0}};
+    std::vector<Site_Type> results;
+    for(int i=0;i<4;i++)
+        results.push_back(Lattice<Site_Type>::get_site({r[0]+nn_r_sub[i][0],r[1]+nn_r_sub[i][1]},nn_r_sub[i][2]));
+    return results;
+}
+
+
+template <class Site_Type>
+Kagomi_Lattice<Site_Type>::Kagomi_Lattice(int L):
+    Lattice<Site_Type>(KAGOMI,L)
+{}
