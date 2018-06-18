@@ -1,8 +1,8 @@
 CC=g++
-CFLAG=-Ofast
+CFLAG=-Ofast -std=c++11
 EXE=./bin/kag_io.exe
 
-Q := 1.1 1.5 2.0 2.5 3.0
+Q := 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 
 RES := $(Q:%=./results/J%.txt)
 PLT := $(RES:%.txt=%.png)
 
@@ -13,7 +13,7 @@ $(EXE):./src/kagomi_openmp.cpp
 	$(CC) -o $(EXE) $(CFLAG) ./src/kagomi_openmp.cpp
 
 %.txt:$(EXE)
-	./bin/kag_io.exe $(@:./results/J%.txt=%) $@
+	./bin/kag_io.exe $(@:results/J%.txt=%) $@
 
 result:$(RES)
 

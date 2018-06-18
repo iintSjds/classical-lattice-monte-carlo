@@ -189,6 +189,7 @@ int main(int argc,char* argv[]){
     if(argc>=2){
         std::string s=argv[1];
         J=std::atof(s.c_str());
+	std::cout<<"J="<<J<<std::endl;
         if(argc==3){
             std::string filename=argv[2];
             file.open(filename);
