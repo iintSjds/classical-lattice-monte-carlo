@@ -2,7 +2,7 @@ CC=g++
 CFLAG=-Ofast -std=c++11
 EXE=./bin/kag_io.exe
 
-Q := 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 
+Q := 0.1 0.2 0.25 6.5 7.0 7.5 8.0
 RES := $(Q:%=./results/J%.txt)
 PLT := $(RES:%.txt=%.png)
 
