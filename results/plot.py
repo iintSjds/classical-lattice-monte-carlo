@@ -70,6 +70,8 @@ xa=xa[xa[:,0].argsort()]
 #plt.plot(x3,a3,"o")
 plt.figure(figsize=(9,9))
 plt.yscale("log")
+plt.xlim((0,5))
+plt.ylim((0.00001,1))
 for i in n:
     plt.plot(x1[i],a1[i],'o')
     plt.plot(x2[i],a2[i],'o')

@@ -31,11 +31,18 @@ for name in fname:
         Js.append(J)
         diff=np.sqrt(np.sum( (a1-b1)**2+(a2-b2)**2+(a3-b3)**2 )/16./16./3.)
         err=np.sqrt(np.sum( (e1)**2+(e2)**2+(e3)**2 )/16./16./3.)
+        Fr.append(diff-err)
         Fr.append(diff/err)
 
+Js=np.array(Js)
+Fr=np.array(Fr)
 
+print Js[np.argmin(Fr)]
 
 plt.figure()
-plt.plot(Js,Fr,"bo-")
-plt.ylim((0.5,5))
+plt.grid()
+plt.plot(Js,Fr,"bo")
+#plt.xlim((0,1))
+#plt.ylim((-.001,0.005))
+#plt.ylim((0.9,10))
 plt.savefig(sys.argv[argn]+"sigma.png")

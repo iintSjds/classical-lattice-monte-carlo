@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <fstream>
 
+
+
 #define PI 3.1415926535897932384626
 
 #define PAR_LEN 16
@@ -15,7 +17,7 @@
 #define N 16
 
 #define PAR_NT 10000000
-#define PAR_NR 1000000000
+#define PAR_NR 10000000
 
 double J=1.0;
 
@@ -188,7 +190,9 @@ int main(int argc,char* argv[]){
     std::ofstream file;
     if(argc>=2){
         std::string s=argv[1];
+        std::cout<<s<<std::endl;
         J=std::atof(s.c_str());
+        std::cout<<"J="<<J<<std::endl;
         if(argc==3){
             std::string filename=argv[2];
             file.open(filename);
