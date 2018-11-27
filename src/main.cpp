@@ -1,7 +1,11 @@
 #include "./model/lattice.h"
 #include <iostream>
 #include <ostream>
+#include <fstream>
+#include <cstdlib>
 #include <vector>
+#include <string>
+#include <cstring>
 #include <cstdlib>
 #include "./utility/rng.h"
 #include <cmath>
@@ -91,7 +95,7 @@ class MC_Machine{
         int update(int);
         int clear();
         double dE(int,const  H_Spin&);
-        int print();
+        int print(std::ostream& out=std::cout);
 };
 
 int MC_Machine::init(){
@@ -171,30 +175,52 @@ int MC_Machine::update(int isCount){
     return 1;
 }
 
-int MC_Machine::print(){
+int MC_Machine::print(std::ostream& out){
     clear();
     for(int i=0;i<spins.size();i++){
-        std::cout<<lat.i2p(i)[0]<<"\t"<<lat.i2p(i)[1]<<"\t"<<corr[i]/count<<std::endl;//"\t"<<spins[i]<<std::endl;
+        out<<lat.i2p(i)[0]<<"\t"<<lat.i2p(i)[1]<<"\t"<<corr[i]/count<<std::endl;//"\t"<<spins[i]<<std::endl;
     }
     std::cout<<"count:"<<count<<"\taccept:"<<accept<<std::endl;
     return 1;
 }
 
-int test(){
-    MC_Machine MC1(BETA,J1,J2,L);
+int test(std::ostream& out,double b=BETA,double j1=J1,double j2=J2,int l=L,int nloop=M){
+    MC_Machine MC1(b,j1,j2,l);
     for(long long int i=0;i<MT;i++) MC1.update(0);
     std::cout<<"therm finished"<<std::endl;
-    for(long long int i=0;i<M;i++){
-        if(i%(M/100)==0){
-            std::cout<<(i*100)/M<<std::endl;
+    for(long long int i=0;i<nloop;i++){
+        if(i%(nloop/100)==0){
+            std::cout<<(i*100)/nloop<<std::endl;
         }
         MC1.update(1);
     }
-    MC1.print();
+    MC1.print(out);
     return 1;
 }
 
-int main(){
-    test();
+int main(int argc,char* argv[]){
+    std::ofstream file;
+    std::string filename;
+    double beta=1,j1=1,j2=0.5;
+    int L=16,N=1000000;
+    filename="result.txt";
+    if(argc>=2){
+        for(int i=1;i<argc;i++){
+            if(std::strcmp(argv[i],"-o")==0&&((i+1)<argc)){
+                filename=argv[i+1];
+            }
+            if(std::strcmp(argv[i],"-p")==0&&((i+5)<argc)){
+                beta=std::atof(argv[i+1]);
+                j1=std::atof(argv[i+2]);
+                j2=std::atof(argv[i+3]);
+                L=std::atoi(argv[i+4]);
+                N=std::atoi(argv[i+5]);
+            }
+        }
+    }
+    std::ofstream out;
+    out.open(filename);
+    std::cout<<"output:"+filename+"\nparameter:\n"<<"\tbeta:"<<beta<<"\n\tj1:"<<j1<<"\n\tj2:"<<j2<<"\n\tL:"<<L<<"\n\tN:"<<N<<std::endl;
+    test(out,beta,j1,j2,L,N);
     return 0;
 }
