@@ -48,4 +48,15 @@ class Square_2D:public Square_Lattice{
         std::vector<int> nn(int);//return nearest neightbor index
         std::vector<int> nnn(int);//return nearest neightbor index
 };
+
+class Triangle_J1J2:public Lattice{
+private:
+    std::vector<std::vector<int>> nnchart;
+    std::vector<std::vector<int>> nnnchart;
+public:
+    Triangle_J1J2(int L);
+    std::vector<int> nn(int);
+    std::vector<int> nnn(int);
+
+};
 #endif

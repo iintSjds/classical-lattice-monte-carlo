@@ -80,6 +80,32 @@ std::vector<int> Square_2D::nn(int i){
 std::vector<int> Square_2D::nnn(int i){
     return nnnchart[i];
 }
+
+Triangle_J1J2::Triangle_J1J2(int L)
+    :Lattice(2,1,L)
+{
+    for(int i=0;i<get_N();i++){
+        std::vector<int> nnlist;
+        nnlist.push_back(((i2p(i)[0]+L+1)%L)*L + (i2p(i)[1]+L)%L);
+        nnlist.push_back(((i2p(i)[0]+L-1)%L)*L + (i2p(i)[1]+L)%L);
+        std::vector<int> nnnlist;
+        nnnlist.push_back(((i2p(i)[0]+L)%L)*L + (i2p(i)[1]+L+1)%L);
+        nnnlist.push_back(((i2p(i)[0]+L)%L)*L + (i2p(i)[1]+L-1)%L);
+        nnnlist.push_back(((i2p(i)[0]+L-1)%L)*L + (i2p(i)[1]+L+1)%L);
+        nnnlist.push_back(((i2p(i)[0]+L+1)%L)*L + (i2p(i)[1]+L-1)%L);
+        nnchart.push_back(nnlist);
+        nnnchart.push_back(nnnlist);
+    }
+}
+
+std::vector<int> Triangle_J1J2::nn(int i){
+    return nnchart[i];
+}
+
+std::vector<int> Triangle_J1J2::nnn(int i){
+    return nnnchart[i];
+}
+
 /*
 std::vector<int> Square_2D::nn(int i){
     return nn(i2p(i));

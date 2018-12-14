@@ -22,7 +22,7 @@ const double J2=0.5;
 const long long int MT=100000;
 const long long int M=10000000;
 
-typedef Square_2D LAT;
+typedef Triangle_J1J2 LAT;
 
 class H_Spin{
     private:
@@ -201,7 +201,7 @@ int test(std::ostream& out,double b=BETA,double j1=J1,double j2=J2,int l=L,int n
 int main(int argc,char* argv[]){
     std::ofstream file;
     std::string filename;
-    double beta=1,j1=1,j2=0.5;
+    double beta=1,j1=1,j2=0.33;
     int L=16,N=1000000;
     filename="result.txt";
     if(argc>=2){
